@@ -54,6 +54,9 @@ EXCLUDED_NOTEBOOKS: Set[str] = {
 EXCLUDED_README_NOTEBOOKS: Set[str] = {
     "quickstarts/Template.ipynb",
     "quickstarts/Authentication_with_OAuth.ipynb",
+    "quickstarts/Get_started_imagen.ipynb",
+    "quickstarts/Get_started_imagen_rest.ipynb",
+    "quickstarts/rest/Imagen_REST.ipynb",
     "examples/Object_detection.ipynb",
     "examples/Google_IO2025_Live_Coding.ipynb",
 }
@@ -150,7 +153,7 @@ PIP_MAGIC_INSTALL_REGEX: Pattern = re.compile(r'^\s*%pip\s+install', re.MULTILIN
 # Regex to detect Colab form model selectors
 # e.g.: MODEL_ID = "gemini-3.7-flash" # @param ["gemini-3.1-pro-preview", "gemini-3.7-flash", "gemini-3.5-flash-lite", "gemini-2.5-pro"]
 MODEL_PARAM_SELECTOR_REGEX: Pattern = re.compile(
-    r'(?:MODEL_ID|model_id|MODEL|model)\s*=\s*["\']([^"\']+)["\']\s*#\s*@param\s*(\[[^\]]+\])',
+    r'(?:MODEL_ID|model_id|MODEL|model)\s*=\s*["\']([^"\']+)["\']\s*#\s*@param\s*(\[[^\]]*\])',
     re.MULTILINE
 )
 
@@ -241,3 +244,45 @@ LICENSE_REGEX: Pattern = re.compile(r'#\s?@title\s+Licensed under the Apache Lic
 # Colab button regex
 COLAB_BUTTON_IMG_REGEX: Pattern = re.compile(r'colab-badge\.svg|colab_logo_32px\.png', re.IGNORECASE)
 COLAB_BUTTON_HREF_REGEX: Pattern = re.compile(r'href=["\'](https://colab\.research\.google\.com/[^"\']+)["\']')
+
+
+# ==============================================================================
+# Link Checking Configuration
+# ==============================================================================
+
+LINK_CHECKER_DEFAULT_TIMEOUT: float = 8.0
+LINK_CHECKER_MAX_EXTERNAL_WORKERS: int = 16
+LINK_CHECKER_USER_AGENT: str = (
+    "Mozilla/5.0 (compatible; GeminiCookbookLinkChecker/1.0; +https://github.com/google-gemini/cookbook)"
+)
+
+# External domains to ignore from external HTTP checks (e.g. localhost, private subnets, key-required APIs)
+LINK_CHECKER_IGNORED_DOMAINS: Set[str] = {
+    "localhost",
+    "127.0.0.1",
+    "0.0.0.0",
+    "example.com",
+    "generativelanguage.googleapis.com",
+    "aistudio.google.com",
+    "cloud.google.com",
+    "linkedin.com",
+    "www.linkedin.com",
+    "twitter.com",
+    "x.com",
+}
+
+# Link URL schemes/patterns that should not be validated as local file paths
+LINK_CHECKER_IGNORED_SCHEMES: List[Pattern] = [
+    re.compile(r"^mailto:", re.IGNORECASE),
+    re.compile(r"^tel:", re.IGNORECASE),
+    re.compile(r"^javascript:", re.IGNORECASE),
+    re.compile(r"^data:", re.IGNORECASE),
+    re.compile(r"^#?$", re.IGNORECASE),
+]
+
+# Explicit placeholder targets allowed in documentation templates
+LINK_CHECKER_EXCLUDED_TARGETS: Set[str] = {
+    "URL",
+    "TODO",
+}
+

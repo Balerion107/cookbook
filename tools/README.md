@@ -13,6 +13,7 @@ These tools are natively hosted in this repository to provide fast, zero-depende
 | **`nblint`** | `tools/nblint_cli.py` | Lints notebooks for licensing, structure, style, SDK best practices, and model selectors. |
 | **`nbfmt`** | `tools/nbfmt_cli.py` | Automatically formats notebook JSON, standardizes metadata, strips empty cells, and aligns code formatting. |
 | **`readme_links`** | `tools/check_readme_links.py` | Validates that new/modified notebooks are linked in section Table of Contents READMEs. |
+| **`check_all_links`** | `tools/check_all_links.py` | Audits internal paths, anchors, blob URLs, and external links across `.md` and `.ipynb` files. |
 | **`config`** | `tools/config.py` | Central configuration file containing model hierarchies, wordlists, exclusions, and URL rules. |
 
 ---
@@ -55,6 +56,21 @@ python tools/check_readme_links.py quickstarts/Get_started.ipynb
 python tools/check_readme_links.py --all
 ```
 
+### Verifying Internal and External Links
+```bash
+# Validate internal links and anchors on specific files (fast CI check)
+python tools/check_all_links.py quickstarts/Get_started.ipynb README.md
+
+# Validate all git-modified files against upstream/main
+python tools/check_all_links.py --changed
+
+# Full repository audit of all internal relative links and anchor slugs
+python tools/check_all_links.py
+
+# Full repository audit including live external HTTP/HTTPS health checks
+python tools/check_all_links.py --all
+```
+
 ---
 
 ## 2. Lint Rules Reference
@@ -66,7 +82,7 @@ python tools/check_readme_links.py --all
 - **`structure::copyright`**: Verifies that cell 0 contains a valid Google / Gemini copyright statement (`##### Copyright 2026 Google LLC.`).
 - **`structure::license`**: Verifies that the notebook contains a collapsed Apache 2.0 license code cell with `# @title Licensed under the Apache License`.
 - **`structure::colab_button`**: Checks for the "Open in Colab" badge and verifies that its destination URL matches `https://colab.research.google.com/github/<repo>/blob/<branch>/<path>`. Automatically adjusts for redirect stubs.
-- **`structure::next_steps`**: Emits a warning if a concluding "Next Steps" or "What's Next" section is missing.
+- **`structure::next_steps`**: Emits a warning if a closing section is missing. Accepted headings: "Next steps", "What's next", "Learn more" / "Learning more", "Further reading" / "Further resources" or "Conclusion".
 
 ### Style & Language Rules (`tools/nblint/rules/style.py`)
 - **`style::inclusive_language`**: Flags discouraged terminology (`blacklist`, `whitelist`, `master`, `slave`) and suggests modern alternatives. **Note**: The word `"native"` is deliberately allowed because terms like *"native audio"*, *"native TTS"*, and *"native multimodal"* are standard Gemini API features.

@@ -124,7 +124,7 @@ Most of the cookbook content is Colab notebooks, which are stored as Json.
 * Only use helper function when you don't have a choice. If it's only a couple of lines, it's usually better to write them
   everytime so that the readers don't have to check the function definition all the time.
 * When selecting a model, use a colab selector for easier maintainability:
-  `MODEL_ID = "gemini-3.8-flash"  # @param ["gemini-3.1-pro-preview", "gemini-3.8-flash", "gemini-3.7-flash", "gemini-3.6-flash", "gemini-3.5-flash-lite", "gemini-2.5-pro"] {"allow-input": true, "isTemplate": true}`
+  `MODEL_ID = "gemini-3.8-flash"  # @param ["gemini-4-argon", "gemini-3.1-pro-preview", "gemini-3.8-flash", "gemini-3.7-flash", "gemini-3.6-flash", "gemini-3.5-flash-lite", "gemini-2.5-pro"] {"allow-input": true, "isTemplate": true}`
   * Always use double quotes `"` for string values and list items.
   * Always format the configuration dictionary as valid JSON (with double-quoted keys like `{"allow-input": true, "isTemplate": true}`).
   * Variable naming: `MODEL_ID` is standard for new notebooks. For existing notebooks that already use `MODEL` or `model_name` across downstream cells, keeping the existing variable name is fully compliant and encouraged to prevent broken references.
@@ -154,7 +154,7 @@ Most of the cookbook content is Colab notebooks, which are stored as Json.
 * Keep examples quick and concise.
 * Do not use extra parameters (like temperature) when not needed to keep the focus on what your notebook is illustrating.
 * If you have to use extra-parameters, explain why and why the specific value the first time you do.
-* Any examples using `yt-dlp` or equivalent that are downloading (or streaming) Youtube content are strictly forbidden as it violates [YouTube terms of service](https://www.youtube.com/t/terms#c3e2907ca8).
+* **Strictly Forbidden (Blocking Review Error)**: Any examples using `yt-dlp`, `yt_dlp`, `pytube`, `pytubefix`, `youtube-dl`, `youtube_dl`, or equivalent tools that download, rip, or stream YouTube content are strictly forbidden as they violate the [YouTube Terms of Service](https://www.youtube.com/t/terms#c3e2907ca8). Always reject any PR introducing them and instruct the author to pass YouTube URLs natively to the Gemini API via `file_uri` (e.g., `types.Part.from_uri(file_uri="https://www.youtube.com/watch?v=...", mime_type="video/mp4")`).
 * Any crypto or blockchain related topics are also forbidden
 
 ## Assets and external data
@@ -180,10 +180,11 @@ Most of the cookbook content is Colab notebooks, which are stored as Json.
     interaction = client.interactions.create(
         model=MODEL_ID,
         input="Here's my prompt",
-        config={
-            "response_mime_type": "application/json",
-            "response_schema": Schema
-        }
+        response_format={
+            "type": "text",
+            "mime_type": "application/json",
+            "schema": Schema.model_json_schema(),
+        },
     )
     ```
 Notice the line break on the first and last lines.
@@ -260,3 +261,7 @@ Type Hints are not mandatory, but when used they should follow those conventions
 * **Write clear and concise comments:** Explain the "why" behind the code, not just the "what".
 * **Comment sparingly:** Well-written code should be self-documenting where possible.
 * **Use complete sentences:** Start comments with a capital letter and use proper punctuation.
+* **No leftover commit, changelog, or AI meta-comments:** All code comments and markdown text must be written from a timeless tutorial perspective for the reader—explaining how the code works in its current state, never narrating the git diff, what was removed/changed, or why a style rule was followed. Always flag and ask to remove:
+  * **Diff/commit comments** describing a fix or migration (e.g., `# Remove the outer 'musicGenerationConfig' key...`, `# Updated to use Interactions API`, `# Fixed per review feedback`, `# Changed model to gemini-3.8-flash`).
+  * **AI placeholder or scaffolding comments** (e.g., `# Rest of the code remains the same`, `# Insert your implementation here`).
+  * **Style-guide meta-commentary** in markdown or code where an AI assistant repeats review/style instructions (e.g., *"Use `%pip` with the required minimum SDK version as per the official style guide"*).

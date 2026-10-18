@@ -26,11 +26,11 @@ See below for more detailed guidelines specific to writing notebooks and guides.
 
 ## Small fixes
 
-Small fixes, such as typos or bug fixes, can be submitted directly via a pull request.
+Small fixes, such as typos or bug fixes, can be submitted directly via a pull request. If you are looking for a place to start, check out the open issues labeled [`good first issue`](https://github.com/google-gemini/cookbook/labels/good%20first%20issue).
 
 ## Content submission
 
-Before you send a PR, or even write a single line, please file an [issue](https://github.com/google-gemini/cookbook/issues). There we can discuss the request and provide guidance about how to structure any content you write.
+Before you send a PR, or even write a single line, please file an [issue](https://github.com/google-gemini/cookbook/issues) (or pick an existing [`good first issue`](https://github.com/google-gemini/cookbook/labels/good%20first%20issue)) to discuss the request and receive guidance on how to structure any content you write.
 
 Adding a new guide often involves lots of detailed reviews and we want to make sure that your idea is fully formed and has full support before you start writing anything. If you want to port an existing guide across (e.g. if you have a guide for Gemini on your own GitHub), feel free to link to it in the issue.
 
@@ -83,6 +83,8 @@ If you have authored a new guide from scratch, you are welcome to include a byli
 All media files (audio, images, video), datasets, and other external assets used in notebooks must be **openly licensed** (e.g. CC0, CC-BY, Apache 2.0, or public domain). Assets with unclear or restrictive licensing must not be used.
 
 Please mention the source and license in the markdown cell that introduces the asset. Prefer stable hosting (the cookbook's GCS bucket, Wikimedia Commons, Internet Archive, YouTube) over ephemeral URLs.
+
+* **Strictly no YouTube downloaders (`yt-dlp`, `pytube`, `pytubefix`, `youtube-dl`, etc.)**: Never use third-party tools or libraries to download, rip, or stream YouTube videos or audio, as this violates the [YouTube Terms of Service](https://www.youtube.com/t/terms#c3e2907ca8) and will fail CI checks. Instead, pass YouTube URLs directly to the Gemini API natively using `file_uri` (e.g., `types.Part.from_uri(file_uri="https://www.youtube.com/watch?v=...", mime_type="video/mp4")`).
 
 ## Dependencies and SDKs
 
@@ -164,7 +166,7 @@ See [`.gemini/styleguide.md`](./.gemini/styleguide.md) for the full list and res
 * If you *must* use extra parameters, explain *why* they are needed and the reasoning behind the specific value the first time you use them.
 * When selecting a model, use a Colab form selector for easier maintainability:
     ```python
-    MODEL_ID = "gemini-3.7-flash" # @param ["gemini-3.1-pro-preview", "gemini-3.7-flash", "gemini-3.5-flash-lite", "gemini-2.5-pro"] {"allow-input": true, "isTemplate": true}
+    MODEL_ID = "gemini-3.8-flash"  # @param ["gemini-4-argon", "gemini-3.1-pro-preview", "gemini-3.8-flash", "gemini-3.7-flash", "gemini-3.6-flash", "gemini-3.5-flash-lite", "gemini-2.5-pro"] {"allow-input": true, "isTemplate": true}
     ```
 * Some notebooks can benefit from having a form to update the prompt:
     ```python
